@@ -1,0 +1,78 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://gosfox.github.io/dollhut/schemas/character.v1.schema.json",
+  "title": "Character",
+  "description": "Stored as characters/{character_id}/character.json. May be accompanied by character.layout.html and character.css in the same folder for a custom card layout.",
+  "type": "object",
+  "required": ["id", "character_version", "name", "created_at", "updated_at"],
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^char_[a-zA-Z0-9]+$",
+      "description": "Permanent UUID, never changes"
+    },
+    "character_version": {
+      "type": "integer",
+      "description": "ONLY character format version",
+      "const": 1
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Display name, not an identifier"
+    },
+    "folder_id": {
+      "type": ["string", "null"],
+      "pattern": "^fld_[a-zA-Z0-9]+$",
+      "description": "Owning folder, null = no folder"
+    },
+    "tags": {
+      "type": "array",
+      "items": { "type": "string" },
+      "uniqueItems": true,
+      "default": [],
+      "description": "Free-form tags"
+    },
+    "description": {
+      "type": "string",
+      "description": "Character bio/description"
+    },
+    "thumbnail": {
+      "type": "string",
+      "description": "Relative path to thumbnail image"
+    },
+    "images": {
+      "type": "array",
+      "default": [],
+      "description": "Gallery images with metadata",
+      "items": {
+        "type": "object",
+        "required": ["path"],
+        "additionalProperties": false,
+        "properties": {
+          "path": { "type": "string", "description": "Relative path to the image" },
+          "alt": { "type": "string", "description": "Alt text" },
+          "caption": { "type": "string", "description": "Optional caption" },
+          "created_at": { "type": "string", "format": "date-time" }
+        }
+      }
+    },
+    "layout_path": {
+      "type": "string",
+      "description": "Optional relative path to character.layout.html, custom card layout"
+    },
+    "style_path": {
+      "type": "string",
+      "description": "Optional relative path to character.css, custom card style"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://gosfox.github.io/dollhut/schemas/folder.v1.schema.json",
+  "title": "Folders",
+  "description": "Full contents of folders.json, all folders at once",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "required": ["id", "folder_version", "name", "parent_id"],
+    "additionalProperties": false,
+    "properties": {
+      "id": {
+        "type": "string",
+        "pattern": "^fld_[a-zA-Z0-9]+$"
+      },
+      "folder_version": {
+        "type": "integer",
+        "description": "ONLY folder format version",
+        "const": 1
+      },
+      "name": {
+        "type": "string",
+        "minLength": 1
+      },
+      "parent_id": {
+        "type": ["string", "null"],
+        "pattern": "^fld_[a-zA-Z0-9]+$",
+        "description": "Parent folder, null = top level"
+      },
+      "position": {
+        "type": "integer",
+        "description": "Manual sort order within parent_id"
+      },
+      "icon": {
+        "type": "string",
+        "description": "Emoji or relative path to a thumbnail image representing this folder"
+      }
+    }
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://gosfox.github.io/dollhut/schemas/board-post.v1.schema.json",
+  "title": "Board Post",
+  "description": "Single post, stored as board/{post_id}.json. Comments/votes are not here, they live in D1",
+  "type": "object",
+  "required": ["id", "post_version", "title", "tag", "body_path", "created_at", "updated_at"],
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^post_[a-zA-Z0-9]+$"
+    },
+    "post_version": {
+      "type": "integer",
+      "description": "ONLY post format version",
+      "const": 1
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1
+    },
+    "tag": {
+      "type": "string",
+      "enum": ["tutorial", "casual", "resources", "other"],
+      "description": "One of four fixed board tags"
+    },
+    "body_path": {
+      "type": "string",
+      "description": "Path to Markdown file with post content"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}

@@ -1,0 +1,78 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://gosfox.github.io/dollhut/schemas/manifest.v1.schema.json",
+  "title": "Manifest",
+  "description": "User repo information",
+  "type": "object",
+  "required": ["manifest_version", "capabilities", "sections"],
+  "additionalProperties": false,
+  "properties": {
+    "manifest_version": {
+      "type": "integer",
+      "description": "ONLY manifest format version",
+      "const": 1
+    },
+
+    "capabilities": {
+      "type": "object",
+      "description": "true = section active, false = inactive",
+      "additionalProperties": false,
+      "properties": {
+        "profile": { "type": "boolean" },
+        "style": { "type": "boolean" },
+        "characters": { "type": "boolean" },
+        "folders": { "type": "boolean" },
+        "nets": { "type": "boolean" },
+        "board": { "type": "boolean" }
+      }
+    },
+
+    "sections": {
+      "type": "object",
+      "description": "Section name -> path(not shown)",
+      "additionalProperties": false,
+      "properties": {
+        "profile": { "type": "string", "description": "Path to profile.json" },
+        "style": { "type": "string", "description": "Path to style.json" },
+        "characters": { "type": "string", "description": "Path to characters/index.json (list character_id)" },
+        "folders": { "type": "string", "description": "Path to folders.json" },
+        "nets": { "type": "string", "description": "Path to nets.json" },
+        "board": { "type": "string", "description": "Path to board/index.json (list post_id)" }
+      }
+    },
+
+    "generated_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Last manifest modification"
+    }
+  },
+
+  "allOf": [
+    {
+      "description": "true -> path",
+      "if": { "properties": { "capabilities": { "properties": { "profile": { "const": true } }, "required": ["profile"] } } },
+      "then": { "properties": { "sections": { "required": ["profile"] } } }
+    },
+    {
+      "if": { "properties": { "capabilities": { "properties": { "style": { "const": true } }, "required": ["style"] } } },
+      "then": { "properties": { "sections": { "required": ["style"] } } }
+    },
+    {
+      "if": { "properties": { "capabilities": { "properties": { "characters": { "const": true } }, "required": ["characters"] } } },
+      "then": { "properties": { "sections": { "required": ["characters"] } } }
+    },
+    {
+      "if": { "properties": { "capabilities": { "properties": { "folders": { "const": true } }, "required": ["folders"] } } },
+      "then": { "properties": { "sections": { "required": ["folders"] } } }
+    },
+    {
+      "if": { "properties": { "capabilities": { "properties": { "nets": { "const": true } }, "required": ["nets"] } } },
+      "then": { "properties": { "sections": { "required": ["nets"] } } }
+    },
+    {
+      "if": { "properties": { "capabilities": { "properties": { "board": { "const": true } }, "required": ["board"] } } },
+      "then": { "properties": { "sections": { "required": ["board"] } } }
+    }
+  ]
+}

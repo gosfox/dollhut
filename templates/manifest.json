@@ -1,0 +1,12 @@
+{
+  "manifest_version": 1,
+  "capabilities": {
+    "profile": true,
+    "characters": true
+  },
+  "sections": {
+    "profile": "profile.json",
+    "characters": "characters/index.json"
+  },
+  "generated_at": "2026-07-18T12:00:00Z"
+}

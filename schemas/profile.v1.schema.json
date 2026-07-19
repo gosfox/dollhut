@@ -1,0 +1,58 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://gosfox.github.io/dollhut/schemas/profile.v1.schema.json",
+  "title": "Profile",
+  "description": "profile.json, bio is GUI-edited HTML/CSS, rendered inside a sandboxed iframe so the user can only break their own profile, never the rest of the site",
+  "type": "object",
+  "required": ["profile_version", "display_name", "created_at", "updated_at"],
+  "additionalProperties": false,
+  "properties": {
+    "profile_version": {
+      "type": "integer",
+      "description": "ONLY profile format version",
+      "const": 1
+    },
+    "display_name": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Independent from GitHub login"
+    },
+    "avatar": {
+      "type": "string",
+      "description": "Relative path to avatar image"
+    },
+    "banner": {
+      "type": "string",
+      "description": "Relative path to banner image"
+    },
+    "bio_html": {
+      "type": "string",
+      "description": "GUI-generated HTML, rendered inside a sandboxed iframe (like ArtFight), not injected into the main page DOM"
+    },
+    "bio_css": {
+      "type": "string",
+      "description": "Custom CSS, applied only inside the same sandboxed iframe as bio_html"
+    },
+    "links": {
+      "type": "array",
+      "default": [],
+      "items": {
+        "type": "object",
+        "required": ["label", "url"],
+        "additionalProperties": false,
+        "properties": {
+          "label": { "type": "string" },
+          "url": { "type": "string", "format": "uri" }
+        }
+      }
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}
