@@ -25,7 +25,7 @@ export async function handleAuthCallback(request: Request, env: AuthEnv): Promis
   const user = await getAuthenticatedUser(token);
 
   const sessionId = crypto.randomUUID();
-  await setSession(env.CACHE, sessionId, { githubLogin: user.login, githubToken: token });
+  await setSession(env.CACHE, sessionId, { githubLogin: user.login, githubToken: token, githubId: user.id});
 
   const headers = new Headers({ Location: env.FRONTEND_URL });
   headers.append(
