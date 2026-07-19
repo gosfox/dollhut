@@ -29,6 +29,9 @@ jobs:
 
       - name: Build
         working-directory: frontend
+        env:
+          VITE_API_URL: https://dollhut-api.gosfox.workers.dev
+          VITE_GITHUB_CLIENT_ID: Ov23liHOI2wOmMrmMg6o
         run: npm run build
 
       - name: Upload Pages artifact
