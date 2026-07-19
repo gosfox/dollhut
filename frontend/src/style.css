@@ -1,0 +1,123 @@
+:root {
+  --ink: #12141c;
+  --surface: #1b1e29;
+  --bone: #f1eee6;
+  --muted: #9aa0ae;
+  --magenta: #e8477c;
+  --marigold: #e8b23d;
+  --hairline: rgba(241, 238, 230, 0.12);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+}
+
+body {
+  background: var(--ink);
+  color: var(--bone);
+  font-family: system-ui, sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 24px;
+}
+
+.card {
+  position: relative;
+  width: 100%;
+  max-width: 420px;
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  border-radius: 4px;
+  padding: 48px 32px 32px;
+  box-shadow: 0 24px 60px -24px rgba(0, 0, 0, 0.6);
+}
+
+.tag {
+  position: absolute;
+  top: -14px;
+  left: 24px;
+  background: var(--marigold);
+  color: var(--ink);
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border-radius: 2px;
+  box-shadow: 0 4px 10px -4px rgba(0, 0, 0, 0.5);
+}
+
+.wordmark {
+  font-family: serif;
+  font-optical-sizing: auto;
+  font-weight: 600;
+  font-size: 32px;
+  margin: 8px 0 4px;
+  color: var(--bone);
+}
+
+.muted {
+  color: var(--muted);
+  line-height: 1.5;
+  margin: 0 0 20px;
+}
+
+.muted.small {
+  font-size: 13px;
+  margin-bottom: 8px;
+}
+
+code {
+  font-family: monospace;
+  font-size: 12px;
+  color: var(--marigold);
+}
+
+.button {
+  display: inline-block;
+  width: 100%;
+  text-align: center;
+  background: var(--magenta);
+  color: var(--bone);
+  font-family: "Inter", sans-serif;
+  font-weight: 500;
+  font-size: 15px;
+  text-decoration: none;
+  border: none;
+  border-radius: 3px;
+  padding: 12px 20px;
+  cursor: pointer;
+}
+
+.button:hover {
+  background: #f05a8a;
+}
+
+.button:active {
+  transform: scale(0.98);
+}
+
+.button:focus-visible {
+  outline: 2px solid var(--marigold);
+  outline-offset: 2px;
+}
+
+.button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.button--ghost {
+  background: transparent;
+  border: 1px solid var(--hairline);
+  color: var(--bone);
+}

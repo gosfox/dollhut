@@ -123,6 +123,16 @@ export async function putFile(
   });
 }
 
+/** Checks whether a repo exists and is reachable with the given token, without throwing on 404. */
+export async function repositoryExists(
+  token: string,
+  owner: string,
+  repo: string
+): Promise<boolean> {
+  const response = await githubRequest(`/repos/${owner}/${repo}`, token, { allow404: true });
+  return response.status !== 404;
+}
+
 /** Creates a new, empty repository owned by the authenticated user. */
 export async function createUserRepository(
   token: string,

@@ -9,8 +9,8 @@ const SESSION_TTL_SECONDS = 7 * 24 * 60 * 60; // 7 days
 
 export interface SessionData {
   githubLogin: string;
-  githubToken: string;
   githubId: number;
+  githubToken: string;
 }
 
 export async function getCachedManifest<T>(

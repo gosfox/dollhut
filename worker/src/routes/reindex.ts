@@ -4,6 +4,9 @@
 // Downloads the manifest + characters index from GitHub, validates them,
 // and mirrors the minimal searchable fields into D1. Never mirrors full
 // character data (description, gallery) -- only what search/browse needs.
+//
+// reindexRepository() is the reusable core -- both the HTTP handler below
+// and routes/account.ts (right after creating a brand new repo) call it.
 
 import { fetchJsonFile } from "../lib/github";
 import {
@@ -26,12 +29,16 @@ export interface ReindexEnv {
   DB: D1Database;
 }
 
-interface ReindexRequestBody {
-  githubRepositoryUrl: string; // e.g. "https://github.com/gosfox/characters"
+export interface ReindexInput {
+  githubRepositoryUrl: string; // e.g. "https://github.com/gosfox/dollhut-data"
   githubOwner: string;
   githubRepo: string;
   githubToken?: string; // only needed for private repos
 }
+
+export type ReindexResult =
+  | { ok: true; repo_id: string; status: "active" }
+  | { ok: false; repo_id: string; error: string };
 
 interface CharacterFile {
   id: string;
@@ -43,15 +50,17 @@ interface CharacterFile {
   updated_at: string;
 }
 
-/** POST /reindex */
-export async function handleReindex(request: Request, env: ReindexEnv): Promise<Response> {
-  const body = (await request.json()) as ReindexRequestBody;
-  const { githubRepositoryUrl, githubOwner, githubRepo, githubToken } = body;
+/** Core reindex logic, reusable outside of an HTTP request/response cycle. */
+export async function reindexRepository(
+  env: ReindexEnv,
+  input: ReindexInput
+): Promise<ReindexResult> {
+  const { githubRepositoryUrl, githubOwner, githubRepo, githubToken } = input;
 
-  let repoRow = await getRepositoryByUrl(env.DB, githubRepositoryUrl);
-  const repoId = repoRow?.repo_id ?? generateId("repo");
+  const existingRepo = await getRepositoryByUrl(env.DB, githubRepositoryUrl);
+  const repoId = existingRepo?.repo_id ?? generateId("repo");
 
-  if (!repoRow) {
+  if (!existingRepo) {
     await upsertRepository(env.DB, { repo_id: repoId, github_repository_url: githubRepositoryUrl });
   }
 
@@ -59,13 +68,13 @@ export async function handleReindex(request: Request, env: ReindexEnv): Promise<
 
   if (!manifest) {
     await setRepositoryStatus(env.DB, repoId, "error", "manifest.json not found");
-    return Response.json({ error: "manifest.json not found" }, { status: 422 });
+    return { ok: false, repo_id: repoId, error: "manifest.json not found" };
   }
 
   const manifestResult = validate<Manifest>(validateManifestFn, manifest);
   if (!manifestResult.valid) {
     await setRepositoryStatus(env.DB, repoId, "error", manifestResult.errors);
-    return Response.json({ error: manifestResult.errors }, { status: 422 });
+    return { ok: false, repo_id: repoId, error: manifestResult.errors ?? "invalid manifest" };
   }
 
   const validManifest = manifestResult.data!;
@@ -106,5 +115,16 @@ export async function handleReindex(request: Request, env: ReindexEnv): Promise<
 
   await setRepositoryStatus(env.DB, repoId, "active");
 
-  return Response.json({ repo_id: repoId, status: "active" });
+  return { ok: true, repo_id: repoId, status: "active" };
+}
+
+/** POST /reindex -- thin HTTP wrapper around reindexRepository(). */
+export async function handleReindex(request: Request, env: ReindexEnv): Promise<Response> {
+  const body = (await request.json()) as ReindexInput;
+  const result = await reindexRepository(env, body);
+
+  if (!result.ok) {
+    return Response.json({ error: result.error }, { status: 422 });
+  }
+  return Response.json({ repo_id: result.repo_id, status: result.status });
 }
