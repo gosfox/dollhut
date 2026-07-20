@@ -1,7 +1,17 @@
 // frontend/src/main.ts
+//
+// The whole shell is one state machine driven by GET /me:
+//
+//   boot -> consume ?session= from URL if present (fresh redirect from GitHub)
+//        -> loading -> GET /me -> not logged in      -> "login"
+//                               -> logged in, no repo -> "create-account"
+//                               -> logged in, has repo -> "dashboard"
+//
+// Nothing here is final UI -- it exists to prove the four states / three
+// endpoints actually connect end to end. Real dashboard content comes later.
 
 import "./style.css";
-import { fetchMe, createAccount, githubLoginUrl, logoutUrl } from "./api/api";
+import { fetchMe, createAccount, githubLoginUrl, logout, storeSession } from "./api/api";
 
 type ViewState =
   | { kind: "loading" }
@@ -14,7 +24,7 @@ const STATE_TAG: Record<ViewState["kind"], string> = {
   loading: "loading",
   login: "login",
   "create-account": "setup",
-  dashboard: "test",
+  dashboard: "specimen no. 1",
   error: "error",
 };
 
@@ -48,6 +58,7 @@ function renderLogin() {
     "login",
     `
       <h1 class="wordmark">Dollhut</h1>
+      <p class="muted">Your characters. Your repository. Your rules.</p>
       <a class="button" href="${githubLoginUrl()}">Continue with GitHub</a>
     `
   );
@@ -90,13 +101,13 @@ function renderDashboard(githubLogin: string, repoId: string) {
       <h1 class="wordmark">Dollhut</h1>
       <p class="muted">Logged in as <strong>${githubLogin}</strong></p>
       <p class="muted small">repo_id: <code>${repoId}</code></p>
-      <p class="muted">The actual dashboard isn't built yet - but the account exists and is indexed.</p>
+      <p class="muted">The actual dashboard isn't built yet -- but the account exists and is indexed.</p>
       <button class="button button--ghost" id="logout-btn">Log out</button>
     `
   );
 
   document.querySelector<HTMLButtonElement>("#logout-btn")!.addEventListener("click", async () => {
-    await fetch(logoutUrl(), { method: "POST", credentials: "include" });
+    await logout();
     boot();
   });
 }
@@ -114,7 +125,21 @@ function renderError(message: string) {
   document.querySelector<HTMLButtonElement>("#retry-btn")!.addEventListener("click", boot);
 }
 
+/** If we just landed here from /auth/callback, the session id is in the URL -- stash it and clean the URL. */
+function consumeSessionFromUrl(): void {
+  const params = new URLSearchParams(window.location.search);
+  const sessionId = params.get("session");
+  if (!sessionId) return;
+
+  storeSession(sessionId);
+  params.delete("session");
+  const cleanQuery = params.toString();
+  const newUrl = window.location.pathname + (cleanQuery ? `?${cleanQuery}` : "") + window.location.hash;
+  window.history.replaceState({}, "", newUrl);
+}
+
 async function boot() {
+  consumeSessionFromUrl();
   renderLoading();
   try {
     const me = await fetchMe();

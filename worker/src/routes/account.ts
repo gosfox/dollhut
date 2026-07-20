@@ -5,7 +5,7 @@
 // This file bridges them: /account/create does the one-time repo setup,
 // /me tells the frontend which of the two states the visitor is in.
 
-import { readSessionCookie } from "./auth";
+import { readBearerToken } from "./auth";
 import { getSession } from "../lib/kv";
 import {
   repositoryExists,
@@ -36,7 +36,7 @@ export interface AccountEnv {
 const DOLLHUT_REPO_NAME = "dollhut-data";
 
 async function requireSession(request: Request, env: AccountEnv) {
-  const sessionId = readSessionCookie(request);
+  const sessionId = readBearerToken(request);
   if (!sessionId) return null;
   return getSession(env.CACHE, sessionId);
 }

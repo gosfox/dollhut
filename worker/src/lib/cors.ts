@@ -1,17 +1,15 @@
 // worker/src/lib/cors.ts
 //
-// The frontend and the Worker run on different origins (different ports
-// even in local dev: 5173 vs 8787), and the session lives in a cookie, so
-// every response needs explicit CORS headers with credentials allowed.
-// "*" is not usable here -- browsers reject a wildcard origin combined with
-// Access-Control-Allow-Credentials: true.
+// Sessions travel as a Bearer token in the Authorization header now, not a
+// cookie, so Access-Control-Allow-Credentials is no longer needed -- but
+// "Authorization" must be explicitly allowed, or the browser strips it from
+// cross-origin requests before they ever reach the Worker.
 
 export function corsHeaders(origin: string): Record<string, string> {
   return {
     "Access-Control-Allow-Origin": origin,
-    "Access-Control-Allow-Credentials": "true",
     "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
-    "Access-Control-Allow-Headers": "Content-Type",
+    "Access-Control-Allow-Headers": "Content-Type, Authorization",
   };
 }
 
