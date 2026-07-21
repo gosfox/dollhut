@@ -1,0 +1,42 @@
+<div class="page">
+  <header class="topbar">
+    <span class="wordmark wordmark--small">Dollhut</span>
+    <div class="topbar__user">
+      <span class="user-chip">{{githubLogin}}</span>
+      <button class="button button--ghost button--small" id="logout-btn">Log out</button>
+    </div>
+  </header>
+
+  <nav class="nav" aria-label="Sections (coming soon)">
+    <span class="nav__item">Characters<i class="soon-dot" aria-hidden="true"></i></span>
+    <span class="nav__item">Folders<i class="soon-dot" aria-hidden="true"></i></span>
+    <span class="nav__item">Nets<i class="soon-dot" aria-hidden="true"></i></span>
+    <span class="nav__item">Board<i class="soon-dot" aria-hidden="true"></i></span>
+    <span class="nav__item">Profile<i class="soon-dot" aria-hidden="true"></i></span>
+  </nav>
+
+  <div class="seam" role="separator"></div>
+
+  <section class="status-card">
+    <span class="tag">dollmaker</span>
+    <h2 class="status-card__title">Your archive is live</h2>
+    <p class="muted">
+      <code>dollhut-data</code> is linked and indexed.
+    </p>
+    <p class="muted small">repo_id: <code>{{repoId}}</code></p>
+    <a class="link" href="{{repoUrl}}" target="_blank" rel="noopener">View repository on GitHub &rarr;</a>
+  </section>
+
+  <section class="module-grid">
+    <div class="module-card">
+      <span class="module-card__count">0</span>
+      <span class="module-card__label">Characters</span>
+      <span class="module-card__note">not built yet</span>
+    </div>
+    <div class="module-card">
+      <span class="module-card__count">0</span>
+      <span class="module-card__label">Board posts</span>
+      <span class="module-card__note">not built yet</span>
+    </div>
+  </section>
+</div>

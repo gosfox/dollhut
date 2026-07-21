@@ -1,11 +1,30 @@
+/* frontend/src/style.css
+ *
+ * Dark dollcore. The signature move is stitching, a running-seam divider and a sewn fabric tag.
+ *
+ * Tokens:
+ *   --ink            #14111c   page background (derived, tinted from --violet)
+ *   --surface        #1f1a2e   card / panel background
+ *   --surface-raised #291f42   nested panels (nav pills, mascot backdrop)
+ *   --bone           #ffffff   primary text (brief colour)
+ *   --muted          #b7aecb   secondary text, tinted lavender for cohesion
+ *   --rust           #a96d55   primary accent: CTAs, links (brief colour)
+ *   --mustard        #fad258   secondary accent: tags, stitching (brief colour)
+ *   --violet         #6051a3   structural accent: borders, nav (brief colour)
+ */
+
+@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap");
+
 :root {
-  --ink: #12141c;
-  --surface: #1b1e29;
-  --bone: #f1eee6;
-  --muted: #9aa0ae;
-  --magenta: #e8477c;
-  --marigold: #e8b23d;
-  --hairline: rgba(241, 238, 230, 0.12);
+  --ink: #14111c;
+  --surface: #1f1a2e;
+  --surface-raised: #291f42;
+  --bone: #ffffff;
+  --muted: #b7aecb;
+  --rust: #a96d55;
+  --mustard: #fad258;
+  --violet: #6051a3;
+  --hairline: rgba(255, 255, 255, 0.1);
 }
 
 * {
@@ -20,73 +39,138 @@ body {
 
 body {
   background: var(--ink);
+  background-image: radial-gradient(circle at 20% 0%, rgba(96, 81, 163, 0.25), transparent 55%),
+    radial-gradient(circle at 85% 100%, rgba(169, 109, 85, 0.16), transparent 50%);
   color: var(--bone);
-  font-family: system-ui, sans-serif;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  font-family: "Inter", system-ui, sans-serif;
   min-height: 100vh;
   padding: 24px;
 }
 
+@media (prefers-reduced-motion: no-preference) {
+  .card,
+  .page {
+    animation: settle 340ms ease-out;
+  }
+}
+
+@keyframes settle {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ---- shared: card shell + sewn tag --------------------------------- */
+
 .card {
   position: relative;
   width: 100%;
-  max-width: 420px;
-  background: var(--surface);
+  max-width: 460px;
+  margin: 48px auto;
+  background: rgba(31, 26, 46, 0.82);
+  backdrop-filter: blur(6px);
   border: 1px solid var(--hairline);
-  border-radius: 4px;
-  padding: 48px 32px 32px;
-  box-shadow: 0 24px 60px -24px rgba(0, 0, 0, 0.6);
+  border-radius: 6px;
+  padding: 44px 32px 32px;
+  box-shadow: 0 24px 60px -24px rgba(0, 0, 0, 0.7);
+  text-align: center;
 }
 
 .tag {
   position: absolute;
-  top: -14px;
+  top: -13px;
   left: 24px;
-  background: var(--marigold);
+  transform: rotate(-2deg);
+  background: var(--mustard);
   color: var(--ink);
   font-family: "IBM Plex Mono", monospace;
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 500;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   padding: 4px 10px;
   border-radius: 2px;
+  border: 1px dashed rgba(20, 17, 28, 0.4);
   box-shadow: 0 4px 10px -4px rgba(0, 0, 0, 0.5);
 }
 
 .wordmark {
-  font-family: serif;
-  font-optical-sizing: auto;
+  font-family: "Cormorant Garamond", serif;
   font-weight: 600;
-  font-size: 32px;
-  margin: 8px 0 4px;
+  font-size: 30px;
   color: var(--bone);
+  margin: 0 0 8px;
+  letter-spacing: 0.01em;
+}
+
+.wordmark--hero {
+  font-size: 52px;
+  margin: 4px 0 10px;
+}
+
+.wordmark--small {
+  font-size: 24px;
+}
+
+.eyebrow {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--mustard);
+  margin: 0;
 }
 
 .muted {
   color: var(--muted);
-  line-height: 1.5;
-  margin: 0 0 20px;
+  line-height: 1.55;
+  margin: 0 0 18px;
 }
 
 .muted.small {
   font-size: 13px;
-  margin-bottom: 8px;
+  margin-bottom: 6px;
 }
 
 code {
-  font-family: monospace;
+  font-family: "IBM Plex Mono", monospace;
   font-size: 12px;
-  color: var(--marigold);
+  color: var(--mustard);
 }
+
+/* ---- seam divider: the signature element --------------------------- */
+
+.seam {
+  height: 2px;
+  margin: 28px 0;
+  background-image: repeating-linear-gradient(
+    to right,
+    var(--violet) 0,
+    var(--violet) 8px,
+    transparent 8px,
+    transparent 16px
+  );
+  opacity: 0.7;
+}
+
+.stitch-icon {
+  color: var(--rust);
+  margin-right: 8px;
+  font-size: 13px;
+}
+
+/* ---- buttons -------------------------------------------------------- */
 
 .button {
   display: inline-block;
   width: 100%;
   text-align: center;
-  background: var(--magenta);
+  background: var(--rust);
   color: var(--bone);
   font-family: "Inter", sans-serif;
   font-weight: 500;
@@ -96,10 +180,11 @@ code {
   border-radius: 3px;
   padding: 12px 20px;
   cursor: pointer;
+  transition: transform 120ms ease, background 120ms ease;
 }
 
 .button:hover {
-  background: #f05a8a;
+  background: #bd7f65;
 }
 
 .button:active {
@@ -107,7 +192,7 @@ code {
 }
 
 .button:focus-visible {
-  outline: 2px solid var(--marigold);
+  outline: 2px solid var(--mustard);
   outline-offset: 2px;
 }
 
@@ -120,4 +205,190 @@ code {
   background: transparent;
   border: 1px solid var(--hairline);
   color: var(--bone);
+  width: auto;
+}
+
+.button--ghost:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.button--small {
+  padding: 6px 14px;
+  font-size: 13px;
+}
+
+.link {
+  color: var(--mustard);
+  font-size: 14px;
+  text-decoration: none;
+  border-bottom: 1px dashed rgba(250, 210, 88, 0.5);
+}
+
+.link:hover {
+  border-bottom-style: solid;
+}
+
+/* ---- landing hero ---------------------------------------------------- */
+
+.hero {
+  width: 100%;
+  max-width: 480px;
+  margin: 64px auto;
+  text-align: center;
+}
+
+.mascot-mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 88px;
+  height: 88px;
+  border-radius: 50%;
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  margin-bottom: 4px;
+}
+
+.hero__lede {
+  color: var(--muted);
+  font-size: 16px;
+  line-height: 1.6;
+  margin: 0 0 28px;
+}
+
+.feature-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.feature-list__item {
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+/* ---- authenticated home page ------------------------------------------ */
+
+.page {
+  width: 100%;
+  max-width: 720px;
+  margin: 32px auto;
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.topbar__user {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.user-chip {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 13px;
+  color: var(--bone);
+  background: var(--surface-raised);
+  border: 1px solid var(--hairline);
+  border-radius: 999px;
+  padding: 5px 14px;
+}
+
+.nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.nav__item {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  border-radius: 4px;
+  padding: 8px 14px;
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.soon-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--mustard);
+  display: inline-block;
+}
+
+.status-card {
+  position: relative;
+  background: rgba(31, 26, 46, 0.82);
+  backdrop-filter: blur(6px);
+  border: 1px solid var(--hairline);
+  border-radius: 6px;
+  padding: 36px 28px 24px;
+  text-align: left;
+  margin-bottom: 20px;
+}
+
+.status-card__title {
+  font-family: "Cormorant Garamond", serif;
+  font-weight: 600;
+  font-size: 26px;
+  color: var(--bone);
+  margin: 6px 0 12px;
+}
+
+.module-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 14px;
+}
+
+.module-card {
+  background: var(--surface);
+  border: 1px dashed var(--hairline);
+  border-radius: 6px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.module-card__count {
+  font-family: "Cormorant Garamond", serif;
+  font-weight: 600;
+  font-size: 32px;
+  color: var(--mustard);
+}
+
+.module-card__label {
+  font-size: 14px;
+  color: var(--bone);
+}
+
+.module-card__note {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 11px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+@media (max-width: 560px) {
+  .topbar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
 }

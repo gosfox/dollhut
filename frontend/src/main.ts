@@ -3,71 +3,49 @@
 // The whole shell is one state machine driven by GET /me:
 //
 //   boot -> consume ?session= from URL if present (fresh redirect from GitHub)
-//        -> loading -> GET /me -> not logged in      -> "login"
+//        -> loading -> GET /me -> not logged in      -> "landing"
 //                               -> logged in, no repo -> "create-account"
-//                               -> logged in, has repo -> "dashboard"
+//                               -> logged in, has repo -> "home"
 //
-// Nothing here is final UI -- it exists to prove the four states / three
-// endpoints actually connect end to end. Real dashboard content comes later.
+// landing.html and home.html are real HTML files under ./templates -- kept
+// separate from the TS so the visual design can be iterated on without
+// touching logic. {{placeholders}} are filled in with renderTemplate().
 
 import "./style.css";
 import { fetchMe, createAccount, githubLoginUrl, logout, storeSession } from "./api/api";
+import landingHtml from "./templates/landing.html?raw";
+import homeHtml from "./templates/home.html?raw";
 
-type ViewState =
-  | { kind: "loading" }
-  | { kind: "login" }
-  | { kind: "create-account"; githubLogin: string }
-  | { kind: "dashboard"; githubLogin: string; repoId: string }
-  | { kind: "error"; message: string };
-
-const STATE_TAG: Record<ViewState["kind"], string> = {
-  loading: "loading",
-  login: "login",
-  "create-account": "setup",
-  dashboard: "specimen no. 1",
-  error: "error",
-};
+function renderTemplate(html: string, vars: Record<string, string>): string {
+  return html.replace(/{{(\w+)}}/g, (_match, key: string) => vars[key] ?? "");
+}
 
 function getApp(): HTMLElement {
   const app = document.querySelector<HTMLDivElement>("#app");
-  if (!app) throw new Error("Missing <div id=\"app\"> in index.html");
+  if (!app) throw new Error('Missing <div id="app"> in index.html');
   return app;
 }
 
-function shell(tagKind: ViewState["kind"], bodyHtml: string): string {
-  return `
+function renderLoading() {
+  getApp().innerHTML = `
     <main class="card">
-      <span class="tag">${STATE_TAG[tagKind]}</span>
-      ${bodyHtml}
+      <span class="tag">loading</span>
+      <h1 class="wordmark">Dollhut</h1>
+      <p class="muted">Opening the cabinet&hellip;</p>
     </main>
   `;
 }
 
-function renderLoading() {
-  getApp().innerHTML = shell(
-    "loading",
-    `
-      <h1 class="wordmark">Dollhut</h1>
-      <p class="muted">Opening the cabinet&hellip;</p>
-    `
-  );
-}
-
-function renderLogin() {
-  getApp().innerHTML = shell(
-    "login",
-    `
-      <h1 class="wordmark">Dollhut</h1>
-      <p class="muted">Your characters. Your repository. Your rules.</p>
-      <a class="button" href="${githubLoginUrl()}">Continue with GitHub</a>
-    `
-  );
+function renderLanding() {
+  getApp().innerHTML = renderTemplate(landingHtml, {
+    loginUrl: githubLoginUrl(),
+  });
 }
 
 function renderCreateAccount(githubLogin: string) {
-  getApp().innerHTML = shell(
-    "create-account",
-    `
+  getApp().innerHTML = `
+    <main class="card">
+      <span class="tag">setup</span>
       <h1 class="wordmark">Welcome, ${githubLogin}</h1>
       <p class="muted">
         Dollhut keeps every character in a repository you own.
@@ -75,8 +53,8 @@ function renderCreateAccount(githubLogin: string) {
       </p>
       <button class="button" id="create-account-btn">Create my Dollhut</button>
       <p class="muted small" id="create-account-status"></p>
-    `
-  );
+    </main>
+  `;
 
   const button = document.querySelector<HTMLButtonElement>("#create-account-btn")!;
   const status = document.querySelector<HTMLParagraphElement>("#create-account-status")!;
@@ -86,7 +64,7 @@ function renderCreateAccount(githubLogin: string) {
     status.textContent = "Creating your repository\u2026";
     try {
       const result = await createAccount();
-      renderDashboard(githubLogin, result.repo_id);
+      renderHome(githubLogin, result.repo_id);
     } catch (err) {
       button.disabled = false;
       status.textContent = (err as Error).message;
@@ -94,17 +72,12 @@ function renderCreateAccount(githubLogin: string) {
   });
 }
 
-function renderDashboard(githubLogin: string, repoId: string) {
-  getApp().innerHTML = shell(
-    "dashboard",
-    `
-      <h1 class="wordmark">Dollhut</h1>
-      <p class="muted">Logged in as <strong>${githubLogin}</strong></p>
-      <p class="muted small">repo_id: <code>${repoId}</code></p>
-      <p class="muted">The actual dashboard isn't built yet -- but the account exists and is indexed.</p>
-      <button class="button button--ghost" id="logout-btn">Log out</button>
-    `
-  );
+function renderHome(githubLogin: string, repoId: string) {
+  getApp().innerHTML = renderTemplate(homeHtml, {
+    githubLogin,
+    repoId,
+    repoUrl: `https://github.com/${githubLogin}/dollhut-data`,
+  });
 
   document.querySelector<HTMLButtonElement>("#logout-btn")!.addEventListener("click", async () => {
     await logout();
@@ -113,19 +86,19 @@ function renderDashboard(githubLogin: string, repoId: string) {
 }
 
 function renderError(message: string) {
-  getApp().innerHTML = shell(
-    "error",
-    `
+  getApp().innerHTML = `
+    <main class="card">
+      <span class="tag">error</span>
       <h1 class="wordmark">Dollhut</h1>
       <p class="muted">Something didn't fit back in its box.</p>
       <p class="muted small">${message}</p>
       <button class="button button--ghost" id="retry-btn">Try again</button>
-    `
-  );
+    </main>
+  `;
   document.querySelector<HTMLButtonElement>("#retry-btn")!.addEventListener("click", boot);
 }
 
-/** If we just landed here from /auth/callback, the session id is in the URL -- stash it and clean the URL. */
+/** If we just landed here from /auth/callback, the session id is in the URL - stash it and clean the URL. */
 function consumeSessionFromUrl(): void {
   const params = new URLSearchParams(window.location.search);
   const sessionId = params.get("session");
@@ -145,7 +118,7 @@ async function boot() {
     const me = await fetchMe();
 
     if (!me.loggedIn) {
-      renderLogin();
+      renderLanding();
       return;
     }
 
@@ -154,7 +127,7 @@ async function boot() {
       return;
     }
 
-    renderDashboard(me.githubLogin!, me.repo_id);
+    renderHome(me.githubLogin!, me.repo_id);
   } catch (err) {
     renderError((err as Error).message);
   }
