@@ -1,6 +1,9 @@
 /* frontend/src/style.css
  *
- * Dark dollcore. The signature move is stitching, a running-seam divider and a sewn fabric tag.
+ * Dollhut -- dark dollcore. Subject: a rag-doll character archive (mascot:
+ * Dolly Hutton, fox-eared cloth doll). The signature move is stitching, not
+ * generic gothic iconography -- a running-seam divider and a sewn fabric
+ * tag, because the material of a rag doll is cloth and thread, not stone.
  *
  * Tokens:
  *   --ink            #14111c   page background (derived, tinted from --violet)
@@ -8,9 +11,9 @@
  *   --surface-raised #291f42   nested panels (nav pills, mascot backdrop)
  *   --bone           #ffffff   primary text (brief colour)
  *   --muted          #b7aecb   secondary text, tinted lavender for cohesion
- *   --rust           #a96d55   primary accent: CTAs, links (brief colour)
- *   --mustard        #fad258   secondary accent: tags, stitching (brief colour)
- *   --violet         #6051a3   structural accent: borders, nav (brief colour)
+ *   --rust           #a96d55   primary accent -- CTAs, links (brief colour)
+ *   --mustard        #fad258   secondary accent -- tags, stitching (brief colour)
+ *   --violet         #6051a3   structural accent -- borders, nav (brief colour)
  */
 
 @import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap");
@@ -233,7 +236,7 @@ code {
 .hero {
   width: 100%;
   max-width: 480px;
-  margin: 64px auto;
+  margin: 0 auto;
   text-align: center;
 }
 
@@ -241,12 +244,18 @@ code {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 88px;
-  height: 88px;
+  width: 150px;
+  height: 150px;
   border-radius: 50%;
+  overflow: hidden;
   background: var(--surface);
   border: 1px solid var(--hairline);
   margin-bottom: 4px;
+}
+
+.mascot-mark img {
+  width: 120%;
+  object-fit: cover;
 }
 
 .hero__lede {
@@ -390,5 +399,109 @@ code {
     flex-direction: column;
     align-items: flex-start;
     gap: 12px;
+  }
+}
+
+/* ---- landing: three-column layout with mascot art + GitHub tutorial --- */
+
+.landing-layout {
+  display: grid;
+  grid-template-columns: minmax(250px, 0.8fr) minmax(420px, 480px) minmax(320px, 420px);
+  align-items: center;
+  justify-content: center;
+  gap: 64px;
+  min-height: calc(100vh - 48px);
+  max-width: 1700px;
+  margin: 0 auto;
+}
+
+.side-art {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  pointer-events: none;
+}
+
+.side-art img {
+  height: min(80vh, 900px);
+  width: auto;
+}
+
+.side-tutorial {
+  background: rgba(31, 26, 46, 0.82);
+  backdrop-filter: blur(6px);
+  border: 1px solid var(--hairline);
+  border-radius: 6px;
+  padding: 20px;
+  width: 150%;
+}
+
+.side-tutorial img {
+  width: 80%;
+}
+
+/* Sewn "cloth patch" holding the wordmark image -- an alternative to the
+   text .wordmark--hero treatment when a real logo asset is used instead. */
+.logo-patch {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: clamp(180px, 20vw, 320px);
+  height: clamp(80px, 10vw, 130px);
+  overflow: hidden;
+  padding: 0;
+  background: #f3efe7;
+  border: 2px dashed #8f7f6a;
+  border-radius: 4px;
+  position: relative;
+  transform: rotate(-2deg);
+  box-shadow: 0 12px 25px rgba(0, 0, 0, 0.35);
+}
+
+.logo-patch::before {
+  content: "";
+  position: absolute;
+  inset: 8px;
+  border: 1px dashed rgba(0, 0, 0, 0.8);
+  pointer-events: none;
+}
+
+.logo-patch img {
+  width: 100%;
+  height: auto;
+  transform: scale(0.8) translateY(-12px);
+}
+
+@media (max-width: 1200px) {
+  .landing-layout {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+  .side-art {
+    order: 1;
+  }
+  .hero {
+    order: 2;
+    max-width: 480px;
+    margin: 0 auto;
+  }
+  .side-tutorial {
+    order: 3;
+    max-width: 650px;
+    width: 100%;
+    margin: 0 auto;
+  }
+  .side-art img {
+    height: 45vh;
+  }
+}
+
+@media (max-width: 600px) {
+  .wordmark--hero {
+    font-size: 42px;
+  }
+  .mascot-mark {
+    width: 160px;
+    height: 160px;
   }
 }

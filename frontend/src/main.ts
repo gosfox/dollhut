@@ -39,6 +39,7 @@ function renderLoading() {
 function renderLanding() {
   getApp().innerHTML = renderTemplate(landingHtml, {
     loginUrl: githubLoginUrl(),
+    base: import.meta.env.BASE_URL,
   });
 }
 
@@ -98,7 +99,7 @@ function renderError(message: string) {
   document.querySelector<HTMLButtonElement>("#retry-btn")!.addEventListener("click", boot);
 }
 
-/** If we just landed here from /auth/callback, the session id is in the URL - stash it and clean the URL. */
+/** If we just landed here from /auth/callback, the session id is in the URL -- stash it and clean the URL. */
 function consumeSessionFromUrl(): void {
   const params = new URLSearchParams(window.location.search);
   const sessionId = params.get("session");
