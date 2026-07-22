@@ -683,6 +683,17 @@ code {
     padding: 18px;
   }
 
+  .side-left {
+    min-height: 950px;
+    align-items: flex-start;
+}
+
+
+.side-misc {
+    padding-bottom: 260px;
+    overflow: hidden;
+}
+
   .other {
     font-size: 17px;
     letter-spacing: .08em;
@@ -696,25 +707,39 @@ code {
     width: 100%;
   }
 
-  .side-art img {
-    height: 320px;
-  }
+.side-art {
+    left: 50%;
+    bottom: 0;
+    transform: translateX(-50%);
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    opacity: .18;
+}
 
-  .landing-doodle {
-    width: 120px;
-    filter: drop-shadow(0 3px 6px rgba(0,0,0,.8));
-  }
+.side-art img {
+    height: 92%;
+    width: auto;
+    max-width: none;
+}
 
-  .doodle-think {
-    bottom: 80px;
-    left: -5px;
-  }
+.landing-doodle {
+    filter: drop-shadow(0 4px 8px rgba(0,0,0,.8));
+}
 
-  .doodle-laugh {
+.doodle-think {
     width: 145px;
+    left: -10px;
+    bottom: 95px;
+}
+
+.doodle-laugh {
+    width: 170px;
     right: -8px;
     bottom: 0;
-  }
+}
 
   .side-tutorial img {
     width: 100%;
