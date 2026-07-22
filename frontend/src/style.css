@@ -1,9 +1,6 @@
 /* frontend/src/style.css
  *
- * Dollhut -- dark dollcore. Subject: a rag-doll character archive (mascot:
- * Dolly Hutton, fox-eared cloth doll). The signature move is stitching, not
- * generic gothic iconography -- a running-seam divider and a sewn fabric
- * tag, because the material of a rag doll is cloth and thread, not stone.
+ * Dark dollcore. The signature move is stitching, a running-seam divider and a sewn fabric tag.
  *
  * Tokens:
  *   --ink            #14111c   page background (derived, tinted from --violet)
@@ -415,16 +412,37 @@ code {
   margin: 0 auto;
 }
 
+.side-left {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.side-misc {
+    position: relative;
+    z-index: 1;
+    width: 80%;
+    background: rgba(31,26,46,.82);
+    backdrop-filter: blur(6px);
+    border: 1px solid var(--hairline);
+    border-radius: 6px;
+    padding: 20px;
+    left: -45%;
+    height: 950px;
+}
+
 .side-art {
-  display: flex;
-  justify-content: center;
-  align-items: flex-end;
-  pointer-events: none;
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    z-index: 0;
+    pointer-events: none;
 }
 
 .side-art img {
-  height: min(80vh, 900px);
-  width: auto;
+    height: min(80vh, 900px);
+    width: auto;
 }
 
 .side-tutorial {
@@ -434,10 +452,48 @@ code {
   border-radius: 6px;
   padding: 20px;
   width: 150%;
+  height: 97%;
 }
 
 .side-tutorial img {
   width: 80%;
+}
+
+.landing-doodle {
+    position: absolute;
+    width: 45%;
+    pointer-events: none;
+    user-select: none;
+    filter: drop-shadow(0 6px 10px rgba(0,0,0,1));
+}
+
+.doodle-think {
+    bottom: 15%;
+    z-index: 2;
+    transform: rotate(-15deg);
+}
+
+.doodle-laugh {
+    right: 1%;
+    bottom: 1%;
+    z-index: 3;
+    transform: rotate(15deg);
+    width: 55%;
+}
+
+/* ---- side links landing ---------------------------------------------- */
+
+.other {
+  color: var(--muted);
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 20px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+.other:hover{
+  color: var(--mustard);
 }
 
 /* Sewn "cloth patch" holding the wordmark image -- an alternative to the
@@ -456,6 +512,7 @@ code {
   position: relative;
   transform: rotate(-2deg);
   box-shadow: 0 12px 25px rgba(0, 0, 0, 0.35);
+  margin: 20px;
 }
 
 .logo-patch::before {
@@ -472,36 +529,194 @@ code {
   transform: scale(0.8) translateY(-12px);
 }
 
-@media (max-width: 1200px) {
+/* -------------------- tablet -------------------- */
+
+@media (max-width: 1400px) {
+
   .landing-layout {
-    grid-template-columns: 1fr;
-    gap: 40px;
+    grid-template-columns: minmax(220px,.7fr)
+                           minmax(360px,460px)
+                           minmax(280px,360px);
+    gap: 36px;
   }
-  .side-art {
-    order: 1;
+
+  .side-misc {
+    width: 95%;
+    left: -18%;
+    height: auto;
+    min-height: 820px;
   }
-  .hero {
-    order: 2;
-    max-width: 480px;
-    margin: 0 auto;
-  }
+
   .side-tutorial {
-    order: 3;
-    max-width: 650px;
-    width: 100%;
-    margin: 0 auto;
+    width: 115%;
   }
+
   .side-art img {
-    height: 45vh;
+    height: min(65vh,700px);
+  }
+
+  .other {
+    font-size: 18px;
+  }
+
+  .landing-doodle {
+    width: 42%;
+  }
+
+  .doodle-laugh {
+    width: 50%;
   }
 }
 
-@media (max-width: 600px) {
-  .wordmark--hero {
-    font-size: 42px;
+
+/* -------------------- small laptop / large tablet -------------------- */
+
+@media (max-width: 1100px) {
+
+  .landing-layout {
+    grid-template-columns: 1fr;
+    gap: 40px;
+    max-width: 760px;
   }
+
+  .side-left,
+  .hero,
+  .side-tutorial {
+    width: 100%;
+  }
+
+  .side-left {
+    order: 1;
+  }
+
+  .hero {
+    order: 2;
+  }
+
+  .side-tutorial {
+    order: 3;
+    width: 100%;
+    height: auto;
+  }
+
+  .side-misc {
+    width: 100%;
+    left: 0;
+    height: auto;
+    min-height: unset;
+    padding-bottom: 180px;
+  }
+
+  .side-art {
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: -20px;
+    opacity: .18;
+  }
+
+  .side-art img {
+    height: 420px;
+  }
+
+  .landing-doodle {
+    width: 170px;
+  }
+
+  .doodle-think {
+    bottom: 95px;
+    left: 10px;
+  }
+
+  .doodle-laugh {
+    width: 200px;
+    right: 5px;
+    bottom: 10px;
+  }
+
+  .side-tutorial img {
+    width: 100%;
+    max-width: 520px;
+    display: block;
+    margin: 0 auto;
+  }
+}
+
+
+/* -------------------- phones -------------------- */
+
+@media (max-width: 700px) {
+
+  body {
+    padding: 16px;
+  }
+
+  .landing-layout {
+    gap: 28px;
+  }
+
+  .hero {
+    max-width: 100%;
+  }
+
   .mascot-mark {
-    width: 160px;
-    height: 160px;
+    width: 120px;
+    height: 120px;
+  }
+
+  .logo-patch {
+    width: clamp(170px,70vw,260px);
+    height: clamp(70px,24vw,100px);
+    margin: 14px auto;
+  }
+
+  .wordmark {
+    font-size: 24px;
+  }
+
+  .hero__lede,
+  .feature-list__item {
+    font-size: 15px;
+  }
+
+  .side-misc,
+  .side-tutorial {
+    padding: 18px;
+  }
+
+  .other {
+    font-size: 17px;
+    letter-spacing: .08em;
+  }
+
+  .button {
+    font-size: 14px;
+  }
+
+  .button--small {
+    width: 100%;
+  }
+
+  .side-art img {
+    height: 320px;
+  }
+
+  .landing-doodle {
+    width: 120px;
+    filter: drop-shadow(0 3px 6px rgba(0,0,0,.8));
+  }
+
+  .doodle-think {
+    bottom: 80px;
+    left: -5px;
+  }
+
+  .doodle-laugh {
+    width: 145px;
+    right: -8px;
+    bottom: 0;
+  }
+
+  .side-tutorial img {
+    width: 100%;
   }
 }
