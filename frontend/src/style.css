@@ -39,8 +39,26 @@ body {
 
 body {
   background: var(--ink);
-  background-image: radial-gradient(circle at 20% 0%, rgba(96, 81, 163, 0.25), transparent 55%),
-    radial-gradient(circle at 85% 100%, rgba(169, 109, 85, 0.16), transparent 50%);
+
+background-color: var(--ink);
+background-image:
+  radial-gradient(circle at 80% 20%, rgba(250, 172, 88, 0.08) 0%, transparent 30%),
+  radial-gradient(circle at 25% 75%, rgba(85, 107, 169, 0.1) 0%, transparent 35%),
+  linear-gradient(45deg,
+    transparent 48%,
+    rgba(151, 81, 81, 0.025) 49%,
+    rgba(255,255,255,.025) 51%,
+    transparent 52%),
+  linear-gradient(-45deg,
+    transparent 48%,
+    rgba(23, 18, 74, 0.025) 49%,
+    rgba(255,255,255,.025) 51%,
+    transparent 52%);
+background-size:
+  cover,
+  cover,
+  42px 42px,
+  42px 42px;
   color: var(--bone);
   font-family: "Inter", system-ui, sans-serif;
   min-height: 100vh;
@@ -235,6 +253,11 @@ code {
   max-width: 480px;
   margin: 0 auto;
   text-align: center;
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 .mascot-mark {
@@ -404,9 +427,10 @@ code {
 .landing-layout {
   display: grid;
   grid-template-columns: minmax(250px, 0.8fr) minmax(420px, 480px) minmax(320px, 420px);
-  align-items: center;
+  align-items: stretch;
   justify-content: center;
   gap: 64px;
+
   min-height: calc(100vh - 48px);
   max-width: 1700px;
   margin: 0 auto;
@@ -429,13 +453,13 @@ code {
     border-radius: 6px;
     padding: 20px;
     left: -45%;
-    height: 950px;
+    min-height: 100%;
 }
 
 .side-art {
     position: absolute;
     left: 0;
-    bottom: 0;
+    bottom: 10%;
     z-index: 0;
     pointer-events: none;
 }
@@ -443,6 +467,7 @@ code {
 .side-art img {
     height: min(80vh, 900px);
     width: auto;
+    filter: drop-shadow(0 6px 10px rgba(0,0,0,0.1));
 }
 
 .side-tutorial {
@@ -452,7 +477,7 @@ code {
   border-radius: 6px;
   padding: 20px;
   width: 150%;
-  height: 97%;
+  height: 100%;
 }
 
 .side-tutorial img {
